@@ -11,15 +11,15 @@ export const action = async ({ request }: ActionArgs) => {
   const address = form.get('address');
 
   // Improve this error?
-  if (!address) return json({ error: 'address not valid' });
+  if (!address) return json({ error: 'address not valid', offices: null });
 
   const offices = await getOffices(address);
 
-  return json({ offices });
+  return json({ offices, error: null });
 };
 
 export default function Index() {
-  const { offices, error } = useActionData<typeof action>() ?? {};
+  const { offices } = useActionData<typeof action>() ?? {};
   const transition = useTransition();
   const submitting = transition.state === 'submitting';
 
