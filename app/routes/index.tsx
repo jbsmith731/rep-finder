@@ -1,30 +1,25 @@
 import { Address } from '@components/Address';
 import { Card } from '@components/Card';
 import { HeadingText } from '@components/HeadingText';
-import type { ActionFunction } from '@remix-run/node';
+import type { ActionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useTransition } from '@remix-run/react';
-import type { IOffices } from '@util/getReps';
 import { getOffices } from '@util/getReps';
 
-type ActionData = {
-  offices: Array<IOffices>;
-};
-
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData();
   const address = form.get('address');
 
   // Improve this error?
-  if (!address) return json({ error: 'address not valid' });
+  if (!address) return json({ error: 'address not valid', offices: null });
 
   const offices = await getOffices(address);
 
-  return { offices };
+  return json({ offices, error: null });
 };
 
 export default function Index() {
-  const { offices } = useActionData<ActionData>() ?? {};
+  const { offices } = useActionData<typeof action>() ?? {};
   const transition = useTransition();
   const submitting = transition.state === 'submitting';
 
