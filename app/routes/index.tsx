@@ -19,7 +19,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Index() {
-  const { offices } = useActionData<typeof action>() ?? {};
+  const { offices, error } = useActionData<typeof action>() ?? {};
   const transition = useTransition();
   const submitting = transition.state === 'submitting';
 
