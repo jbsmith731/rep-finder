@@ -32,7 +32,13 @@ export default function Index() {
 
         <Form className="p-1 mt-4 rounded-md overflow-hidden" method="post">
           <label className="sr-only">Address</label>
-          <input className="py-3 pl-2" type="text" name="address" required />
+          <input
+            className="py-3 pl-2"
+            type="text"
+            name="address"
+            placeholder="Address"
+            required
+          />
           <button
             className="py-3 px-4 bg-indigo-100 text-indigo-900"
             type="submit"
