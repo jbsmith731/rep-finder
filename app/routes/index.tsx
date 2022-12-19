@@ -1,5 +1,5 @@
 import { Address } from '@components/Address';
-import { Card } from '@components/Card';
+import { card } from '@components/Card';
 import { heading } from '@components/HeadingText';
 import type { ActionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -72,7 +72,7 @@ export default function Index() {
                     if (!official) return null;
 
                     return (
-                      <Card key={official.name}>
+                      <li className={card()} key={official.name}>
                         <h3 className={heading({ size: '2' })}>
                           {official.name}
                         </h3>
@@ -113,7 +113,7 @@ export default function Index() {
                             })}
                           </ul>
                         ) : null}
-                      </Card>
+                      </li>
                     );
                   })}
                 </ul>
