@@ -1,6 +1,6 @@
 import { Address } from '@components/Address';
 import { Card } from '@components/Card';
-import { HeadingText } from '@components/HeadingText';
+import { heading } from '@components/HeadingText';
 import type { ActionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useTransition } from '@remix-run/react';
@@ -10,25 +10,35 @@ export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData();
   const address = form.get('address');
 
-  // Improve this error?
-  if (!address) return json({ error: 'address not valid', offices: null });
+  if (!address)
+    return json({ error: 'Address not valid', offices: null, address });
 
-  const offices = await getOffices(address);
+  try {
+    const offices = await getOffices(address);
 
-  return json({ offices, error: null });
+    if (!offices?.length) {
+      return json({ offices: null, error: `No reps found`, address });
+    }
+
+    return json({ offices, error: null, address });
+  } catch (error) {
+    return json({ offices: null, error, address });
+  }
 };
 
 export default function Index() {
-  const { offices } = useActionData<typeof action>() ?? {};
+  const { offices, error } = useActionData<typeof action>() ?? {};
   const transition = useTransition();
   const submitting = transition.state === 'submitting';
+
+  console.log(error);
 
   return (
     <div className="text-gray-600">
       <section className="bg-indigo-500 py-24 text-center">
-        <HeadingText as="h1" size="6" color="white">
+        <h1 className={heading({ size: '6', color: 'white' })}>
           Find your reps
-        </HeadingText>
+        </h1>
 
         <Form className="p-1 mt-4 rounded-md overflow-hidden" method="post">
           <label className="sr-only">Address</label>
@@ -53,9 +63,9 @@ export default function Index() {
           <div className="w-max mx-auto grid grid-flow-row gap-y-12">
             {offices.map((rep) => (
               <div key={rep.office}>
-                <HeadingText size="4" className="mb-4">
+                <h2 className={heading({ className: 'mb-4', size: '4' })}>
                   {rep.office}
-                </HeadingText>
+                </h2>
 
                 <ul className="grid sm:grid-cols-2 gap-6">
                   {rep.officials?.map((official) => {
@@ -63,8 +73,9 @@ export default function Index() {
 
                     return (
                       <Card key={official.name}>
-                        <HeadingText size="2">{official.name}</HeadingText>
-
+                        <h3 className={heading({ size: '2' })}>
+                          {official.name}
+                        </h3>
                         <span className="text-sm uppercase">
                           {official.party?.replace(/\sParty/, '')}
                         </span>

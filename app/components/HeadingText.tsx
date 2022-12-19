@@ -1,18 +1,6 @@
-import type { VariantProps } from 'cva';
-import { cva, cx } from 'cva';
-import * as React from 'react';
-import type { PolymorphicComponentProps } from 'types';
+import { cva } from 'cva';
 
-type HeadingProps<C extends React.ElementType> = VariantProps<typeof styles> &
-  PolymorphicComponentProps<
-    C,
-    {
-      as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-      children: React.ReactNode;
-    }
-  >;
-
-const styles = cva('font-bold', {
+export const heading = cva('font-bold', {
   variants: {
     size: {
       '-1': 'text-sm',
@@ -34,18 +22,3 @@ const styles = cva('font-bold', {
     color: 'black',
   },
 });
-
-export const HeadingText = <C extends React.ElementType = 'p'>({
-  as,
-  size,
-  color,
-  className,
-  ...restProps
-}: HeadingProps<C>) => {
-  const component = as || 'h2';
-
-  return React.createElement(component, {
-    className: cx(className, styles({ size, color })),
-    ...restProps,
-  });
-};
